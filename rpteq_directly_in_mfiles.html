@@ -1,0 +1,343 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Reporting Equations Directly in M-Files</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-08-07"><meta name="DC.source" content="rpteq_directly_in_mfiles.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Reporting Equations Directly in M-Files</h1><!--introduction--><p>Creating an <tt>rpteq</tt> object directly in an m-file or command prompt is the most straightforward way. The reporting equations can be then executed immediately, after you create an input database with all necessary initial conditions and other variables and constants occuring on the RHS of the reporting equations.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Clear Workspace</a></li><li><a href="#2">Write Reporting Equations</a></li><li><a href="#3">Create Input Database</a></li><li><a href="#4">Evaluate Reporting Equations</a></li><li><a href="#5">Control Contents of Output Database</a></li><li><a href="#6">Save Input and Output Data for Further Use</a></li></ul></div><h2 id="1">Clear Workspace</h2><pre class="codeinput">close <span class="string">all</span>
+clear
+<span class="comment">%#ok&lt;*NOPTS&gt;</span>
+</pre><h2 id="2">Write Reporting Equations</h2><p>Throughout the tutorial, we use the same three reporting equations:</p><pre>   growth = 100*(y/y{-1}-1);
+   a = c * a{-1}^0.8 * b{-1}^0.2 * exp(e);
+   b = sqrt(b{-1});</pre><p>Write the equations in a <tt>rpteq</tt> object as a cell array of strings. The left-hand side of each equation needs to be the name of a variable with no lag or lead. Each equation needs to be ended with a semicolon. The right-hand side can include any kind of expression, referring to LHS variables, their lags and lead, and other variables. Neither LHS variables nor RHS variables are declared in an <tt>rpteq</tt> object.</p><pre class="codeinput">q = rpteq( { <span class="string">'"Growth" growth = 100*(y/y{-1}-1);'</span>, <span class="keyword">...</span>
+             <span class="string">'a = c * a{-1}^0.8 * b{-1}^0.2 * exp(e);'</span>, <span class="keyword">...</span>
+             <span class="string">'b = sqrt(b{-1});'</span> } );
+</pre><h2 id="3">Create Input Database</h2><p>The three reporting equations have some lags of LHS variables on the RHS, <tt>a{-1}</tt> and <tt>b{-1}</tt>, as well as some other names, <tt>y</tt>, <tt>e</tt>, <tt>c</tt>. All these must be supplied in an input database created or existing before the <tt>rpteq</tt> object is evaluated. Note that we don't have to supply the variable <tt>growth</tt> in the input database. It will be created and evaluated on the fly.</p><pre class="codeinput">startDate = qq(2010, 1);
+endDate = qq(2011, 4);
+
+d = struct( );
+d.y = 10+Series(startDate-1:endDate, @rand);
+d.a = Series(startDate-4:startDate-1, 0.776);
+d.b = Series(startDate-4:startDate-1, 0.569);
+d.e = Series(startDate:endDate, @randn)*0.5;
+d.c = 1.1;
+</pre><h2 id="4">Evaluate Reporting Equations</h2><p>Call the <tt>run</tt> command to evaluate the reporting equations. The equations are evaluated one by one, period by period, i.e. in the following order</p><div><ol><li>first equation, first period,</li><li>second equation, first period,</li><li>third equation, first period,</li><li>first equation, second period,</li><li>second equation, second period,</li><li>third equation, second period, ..., etc.</li></ol></div><p>By default, the output database, <tt>d1</tt>, only contains values for LHS variables on the evaluation range, <tt>startDate:endDate</tt>, plus all necessary lags and leads (depending on the occurence of lags and leads of the LHS variables on the RHS of the reporting equations). This means that <tt>growth</tt> is returned only for <tt>startDate:endDate</tt>,  while <tt>a</tt> and <tt>b</tt> are returned for <tt>startDate-1:endDate</tt>. Any other values supplied in the input database for these variables will be simply discarded; see options <tt>AppendPresample=</tt> and <tt>AppendPostSample=</tt> in the next section to change this behavior.</p><pre class="codeinput">d1 = run(q, d, startDate:endDate)
+
+d1.growth
+d1.a
+d1.b
+</pre><pre class="codeoutput">
+d1 = 
+
+  struct with fields:
+
+         y: [9&times;1 Series]
+         a: [8&times;1 Series]
+         b: [8&times;1 Series]
+         e: [8&times;1 Series]
+         c: 1.1000
+    growth: [8&times;1 Series]
+
+
+ans = 
+
+    &lt;a href="matlab: help Series"&gt;Series&lt;/a&gt; Object: 8-by-1
+
+    2010Q1:  -2.9552
+    2010Q2:  0.35179
+    2010Q3:   7.9953
+    2010Q4:  0.12871
+    2011Q1:  -3.4768
+    2011Q2:  -4.8739
+    2011Q3:   1.7396
+    2011Q4:   1.1566
+    
+    'Dates'    'Growth'
+
+    User Data: Empty
+
+
+ans = 
+
+    &lt;a href="matlab: help Series"&gt;Series&lt;/a&gt; Object: 8-by-1
+
+    2010Q1:   1.1917
+    2010Q2:   0.6146
+    2010Q3:  0.22599
+    2010Q4:  0.15991
+    2011Q1:  0.29775
+    2011Q2:  0.50574
+    2011Q3:  0.79772
+    2011Q4:  0.85941
+    
+    'Dates'    ''
+
+    User Data: Empty
+
+
+ans = 
+
+    &lt;a href="matlab: help Series"&gt;Series&lt;/a&gt; Object: 8-by-1
+
+    2010Q1:  0.75432
+    2010Q2:  0.86852
+    2010Q3:  0.93194
+    2010Q4:  0.96537
+    2011Q1:  0.98253
+    2011Q2:  0.99123
+    2011Q3:   0.9956
+    2011Q4:   0.9978
+    
+    'Dates'    ''
+
+    User Data: Empty
+
+</pre><h2 id="5">Control Contents of Output Database</h2><p>Use the following options to control the contents of the output database returned by the <tt>run(~)</tt> command:</p><div><ul><li><tt>AppendPresample=</tt> and/or <tt>AppendPostsample</tt> when set to <tt>true</tt> add pre-sample and/or post-sample values from the input database to the output database; this is similar to the same options in <tt>model/simulate</tt>. Note the difference between <tt>d1.a</tt> and <tt>d2.a</tt>: the latter includes values prior to <tt>startDate-1</tt> (the same for <tt>d1.b</tt> and <tt>d2.b</tt>).</li></ul></div><div><ul><li><tt>Fresh=</tt> when set to <tt>true</tt> causes the output database to include only time series for LHS variables; all other entries found in the input database will be discarded. The output database <tt>d3</tt> hence does not include <tt>y</tt>, <tt>e</tt> or <tt>c</tt>.</li></ul></div><pre class="codeinput">d2 = run(q, d, startDate:endDate, <span class="string">'dbOverlay='</span>, true)
+d2.a
+d2.b
+
+d3 = run(q, d, startDate:endDate, <span class="string">'fresh='</span>, true)
+</pre><pre class="codeoutput">
+d2 = 
+
+  struct with fields:
+
+         y: [9&times;1 Series]
+         a: [12&times;1 Series]
+         b: [12&times;1 Series]
+         e: [8&times;1 Series]
+         c: 1.1000
+    growth: [8&times;1 Series]
+
+
+ans = 
+
+    &lt;a href="matlab: help Series"&gt;Series&lt;/a&gt; Object: 12-by-1
+
+    2009Q1:    0.776
+    2009Q2:    0.776
+    2009Q3:    0.776
+    2009Q4:    0.776
+    2010Q1:   1.1917
+    2010Q2:   0.6146
+    2010Q3:  0.22599
+    2010Q4:  0.15991
+    2011Q1:  0.29775
+    2011Q2:  0.50574
+    2011Q3:  0.79772
+    2011Q4:  0.85941
+    
+    'Dates'    ''
+
+    User Data: Empty
+
+
+ans = 
+
+    &lt;a href="matlab: help Series"&gt;Series&lt;/a&gt; Object: 12-by-1
+
+    2009Q1:    0.569
+    2009Q2:    0.569
+    2009Q3:    0.569
+    2009Q4:    0.569
+    2010Q1:  0.75432
+    2010Q2:  0.86852
+    2010Q3:  0.93194
+    2010Q4:  0.96537
+    2011Q1:  0.98253
+    2011Q2:  0.99123
+    2011Q3:   0.9956
+    2011Q4:   0.9978
+    
+    'Dates'    ''
+
+    User Data: Empty
+
+
+d3 = 
+
+  struct with fields:
+
+    growth: [8&times;1 Series]
+         a: [8&times;1 Series]
+         b: [8&times;1 Series]
+
+</pre><h2 id="6">Save Input and Output Data for Further Use</h2><pre class="codeinput">save <span class="string">rpteq_directly_in_mfiles.mat</span> <span class="string">d</span> <span class="string">d1</span> <span class="string">d2</span> <span class="string">d3</span> <span class="string">startDate</span> <span class="string">endDate</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Reporting Equations Directly in M-Files 
+% 
+% Creating an |rpteq| object directly in an m-file or command
+% prompt is the most straightforward way. The reporting equations
+% can be then executed immediately, after you create an input
+% database with all necessary initial conditions and other
+% variables and constants occuring on the RHS of the reporting
+% equations.
+
+
+%% Clear Workspace 
+
+close all
+clear
+%#ok<*NOPTS>
+
+
+%% Write Reporting Equations 
+%
+% Throughout the tutorial, we use the same three reporting equations:
+%
+%     growth = 100*(y/y{-1}-1);
+%     a = c * a{-1}^0.8 * b{-1}^0.2 * exp(e);
+%     b = sqrt(b{-1});
+%
+% Write the equations in a |rpteq| object as a cell array of strings.
+% The left-hand side of each equation needs to be the name of a variable
+% with no lag or lead. Each equation needs to be ended with a semicolon.
+% The right-hand side can include any kind of expression, referring to LHS
+% variables, their lags and lead, and other variables. Neither LHS
+% variables nor RHS variables are declared in an |rpteq| object.
+
+q = rpteq( { '"Growth" growth = 100*(y/y{-1}-1);', ...
+             'a = c * a{-1}^0.8 * b{-1}^0.2 * exp(e);', ...
+             'b = sqrt(b{-1});' } );
+
+%% Create Input Database 
+%
+% The three reporting equations have some lags of LHS variables on the RHS, 
+% |a{-1}| and |b{-1}|, as well as some other names, |y|, |e|, |c|. All
+% these must be supplied in an input database created or existing before
+% the |rpteq| object is evaluated. Note that we don't have to supply the
+% variable |growth| in the input database. It will be created and evaluated
+% on the fly.
+
+startDate = qq(2010, 1);
+endDate = qq(2011, 4);
+
+d = struct( );
+d.y = 10+Series(startDate-1:endDate, @rand);
+d.a = Series(startDate-4:startDate-1, 0.776);
+d.b = Series(startDate-4:startDate-1, 0.569);
+d.e = Series(startDate:endDate, @randn)*0.5;
+d.c = 1.1;
+
+%% Evaluate Reporting Equations 
+%
+% Call the |run| command to evaluate the reporting equations. The equations
+% are evaluated one by one, period by period, i.e. in the following order
+%
+% # first equation, first period, 
+% # second equation, first period, 
+% # third equation, first period, 
+% # first equation, second period, 
+% # second equation, second period, 
+% # third equation, second period, ..., etc.
+%
+% By default, the output database, |d1|, only contains values for LHS
+% variables on the evaluation range, |startDate:endDate|, plus all
+% necessary lags and leads (depending on the occurence of lags and leads of
+% the LHS variables on the RHS of the reporting equations). This means that
+% |growth| is returned only for |startDate:endDate|,  while |a| and |b| are
+% returned for |startDate-1:endDate|. Any other values supplied in the
+% input database for these variables will be simply discarded; see options
+% |AppendPresample=| and |AppendPostSample=| in the next section to change
+% this behavior.
+
+d1 = run(q, d, startDate:endDate)
+
+d1.growth 
+d1.a 
+d1.b 
+
+
+%% Control Contents of Output Database 
+%
+% Use the following options to control the contents of the output database
+% returned by the |run(~)| command:
+%
+% * |AppendPresample=| and/or |AppendPostsample| when set to |true| add
+% pre-sample and/or post-sample values from the input database to the output
+% database; this is similar to the same options in |model/simulate|. Note
+% the difference between |d1.a| and |d2.a|: the latter includes values
+% prior to |startDate-1| (the same for |d1.b| and |d2.b|).
+%
+% * |Fresh=| when set to |true| causes the output database to include only
+% time series for LHS variables; all other entries found in the input
+% database will be discarded. The output database |d3| hence does not
+% include |y|, |e| or |c|.
+
+d2 = run(q, d, startDate:endDate, 'dbOverlay=', true)
+d2.a
+d2.b
+
+d3 = run(q, d, startDate:endDate, 'fresh=', true)
+
+
+%% Save Input and Output Data for Further Use 
+
+save rpteq_directly_in_mfiles.mat d d1 d2 d3 startDate endDate
+
+
+##### SOURCE END #####
+--></body></html>

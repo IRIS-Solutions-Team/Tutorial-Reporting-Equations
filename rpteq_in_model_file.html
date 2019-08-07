@@ -1,0 +1,541 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Reporting Equations in Model File</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-08-07"><meta name="DC.source" content="rpteq_in_model_file.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Reporting Equations in Model File</h1><!--introduction--><p>Reporting equations can be included in a model file, under the heading <tt>!reporting_equations</tt>. The is convenient when you need to calculate and report a number of variables that are transformations of some other model results but do not feed back into the model. Reporting equations are mostly treated separately from the rest of the model: for example, the reporting equations are not evaluated within a <tt>simulate</tt> command but need to be run using the <tt>reporting</tt> command.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Clear Workspace</a></li><li><a href="#2">Look into Model File</a></li><li><a href="#3">Read Model File</a></li><li><a href="#4">Alternative Way of Creating Model File</a></li><li><a href="#5">Create Input Database for Simulation</a></li><li><a href="#6">Simulate Transition Equations</a></li><li><a href="#7">Add Initial Conditions for Reporting Equations</a></li><li><a href="#8">Run Reporting Equations</a></li></ul></div><h2 id="1">Clear Workspace</h2><pre class="codeinput">close <span class="string">all</span>
+clear
+<span class="comment">%#ok&lt;*NOPTS&gt;</span>
+</pre><h2 id="2">Look into Model File</h2><p>The model file <tt>example.model</tt> contains two transition variables and equations, and three reporting equations, which are exactly the same as in the other examples in this tutorial. Note that you do not declare variables created or used in reporting equations.</p><pre class="codeinput">edit <span class="string">example.model</span>
+</pre><h2 id="3">Read Model File</h2><p>Read the model file <tt>Example.model</tt> and create a model object. Set standard errors for the two model shocks, solve the model and its steady state (because this is a linear model, steady state is computed <b>after</b> the first-order solution). List transition variables, transition equations and reporting equations. Retrieve the reporting object (which can then be manipulated separately if you wish). Note there is nothing like reporting variables in the model object; they are created on the fly when running reporting equations.</p><pre class="codeinput">m = model(<span class="string">'example.model'</span>, <span class="string">'Linear='</span>, true);
+m.std_eps = 0.05;
+m.std_omg = 0.05;
+m = solve(m);
+m = sstate(m);
+
+get(m, <span class="string">'xNames'</span>).'
+get(m, <span class="string">'xEqtn'</span>).'
+get(m, <span class="string">'rEqtn'</span>).'
+get(m, <span class="string">'rpteq'</span>)
+</pre><pre class="codeoutput">
+ans =
+
+  2&times;1 cell array
+
+    {'y'}
+    {'e'}
+
+
+ans =
+
+  1&times;2 cell array
+
+    {'log(y)=0.02+log(y{-1})+eps;'}    {'e=0.8*e{-1}+omg;'}
+
+
+ans =
+
+  3&times;1 cell array
+
+    {'growth=100*(y/y{-1}-1)'        }
+    {'a=c*a{-1}^0.8*b{-1}^0.2*exp(e)'}
+    {'b=sqrt(b{-1})'                 }
+
+
+ans = 
+
+&lt;a href="matlab: help rpteq"&gt;rpteq&lt;/a&gt; Object
+    Number of Equations: [3]
+    Comment: 
+    User Data: Empty
+    Export File(s): [0]
+
+</pre><h2 id="4">Alternative Way of Creating Model File</h2><p>Yet another way of creating the same model object would be importing the reporting equations into a model file using the keyword <tt>!import</tt>; see <tt>yet_another_example.model</tt>. The two model objects, <tt>m</tt> and <tt>m1</tt>, are the same.</p><pre class="codeinput">edit <span class="string">yet_another_example.model</span>
+m1 = model(<span class="string">'yet_another_example.model'</span>, <span class="string">'Linear='</span>, true);
+isequal(m, m1)
+</pre><pre class="codeoutput">
+ans =
+
+  logical
+
+   1
+
+</pre><h2 id="5">Create Input Database for Simulation</h2><p>Create an initial input database (here, a steady-state database) for simulating transition equations. The option <tt>'randomShocks=' true</tt> says that the two model shocks, <tt>eps</tt> and <tt>omg</tt>, will be drawn randomly from a normal distribution with std errors set in the model object, <tt>std_eps</tt> and <tt>std_omg</tt>.</p><pre class="codeinput">startDate = qq(2010, 1);
+endDate = qq(2011, 4);
+
+d = sstatedb(m, startDate:endDate, <span class="string">'ShockFunc='</span>, @randn)
+d.eps
+d.omg
+</pre><pre class="codeoutput">
+d = 
+
+  struct with fields:
+
+          y: [9&times;1 Series]
+          e: [9&times;1 Series]
+     ttrend: [9&times;1 Series]
+        eps: [8&times;1 Series]
+        omg: [8&times;1 Series]
+    std_eps: 0.0500
+    std_omg: 0.0500
+     growth: [0&times;1 Series]
+          a: [0&times;1 Series]
+          b: [0&times;1 Series]
+
+
+ans = 
+
+    &lt;a href="matlab: help Series"&gt;Series&lt;/a&gt; Object: 8-by-1
+
+    2010Q1:   -0.041568
+    2010Q2:    -0.05782
+    2010Q3:    -0.10013
+    2010Q4:    0.026003
+    2011Q1:  -0.0017386
+    2011Q2:    0.050934
+    2011Q3:   -0.035727
+    2011Q4:   -0.011239
+    
+    'Dates'    'eps'
+
+    User Data: Empty
+
+
+ans = 
+
+    &lt;a href="matlab: help Series"&gt;Series&lt;/a&gt; Object: 8-by-1
+
+    2010Q1:    -0.04896
+    2010Q2:   -0.026678
+    2010Q3:    0.048211
+    2010Q4:  -0.0010014
+    2011Q1:   -0.039908
+    2011Q2:  -0.0066609
+    2011Q3:    0.067569
+    2011Q4:   -0.029451
+    
+    'Dates'    'omg'
+
+    User Data: Empty
+
+</pre><h2 id="6">Simulate Transition Equations</h2><p>Simulate transition equations. The <tt>simulate</tt> command does not do anything with reporting equations. The output database, <tt>s</tt>, does not include any of the variables created in reporting equations.</p><pre class="codeinput">s = simulate(m, d, startDate:endDate, <span class="string">'AppendPresample='</span>, true)
+</pre><pre class="codeoutput">
+s = 
+
+  struct with fields:
+
+          y: [9&times;1 Series]
+          e: [9&times;1 Series]
+        eps: [8&times;1 Series]
+        omg: [8&times;1 Series]
+     ttrend: [9&times;1 Series]
+    std_eps: 0.0500
+    std_omg: 0.0500
+
+</pre><h2 id="7">Add Initial Conditions for Reporting Equations</h2><p>Before running the reporting equations, create time series with the necessary initial conditions. Use the output database from the previous simulation as an input database into the reporting equations. The reporting variables <tt>a</tt> and <tt>b</tt> occur with lags in reporintg equations, so they need to be supplied starting values. Also, the variable or constant <tt>c</tt> on the right-hand side of the last reporting equation needs to be assigned in the input database, too.</p><pre class="codeinput">s.a = Series(startDate-1, 0.776);
+s.b = Series(startDate-1, 0.569);
+s.c = 1.1;
+
+s
+</pre><pre class="codeoutput">
+s = 
+
+  struct with fields:
+
+          y: [9&times;1 Series]
+          e: [9&times;1 Series]
+        eps: [8&times;1 Series]
+        omg: [8&times;1 Series]
+     ttrend: [9&times;1 Series]
+    std_eps: 0.0500
+    std_omg: 0.0500
+          a: [1&times;1 Series]
+          b: [1&times;1 Series]
+          c: 1.1000
+
+</pre><h2 id="8">Run Reporting Equations</h2><p>Finally, run the reportng equations using the <tt>reporting</tt> command, with the model object as its first input argument. This command has exactly the same syntax as <tt>rpteq/run</tt> described in the other tutorial files.</p><pre class="codeinput">s = reporting(m, s, startDate:endDate, <span class="string">'AppendPresample='</span>, true)
+
+s.growth
+s.a
+s.b
+
+<span class="comment">% ...</span>
+<span class="comment">%</span>
+<span class="comment">% Alternatively, retrieve the |rpteq| object from the model object using</span>
+<span class="comment">% the |get(~)| command, and run the reporting equations using the |run(~)|</span>
+<span class="comment">% command on it, exactly the same way as in the |rpt_directly_in_mfile|.</span>
+
+q = get(m, <span class="string">'rpteq'</span>);
+
+s1 = run(q, s, startDate:endDate, <span class="string">'AppendPresample='</span>, true)
+
+s1.growth
+s1.a
+s1.b
+
+maxabs(s, s1)
+</pre><pre class="codeoutput">
+s = 
+
+  struct with fields:
+
+          y: [9&times;1 Series]
+          e: [9&times;1 Series]
+        eps: [8&times;1 Series]
+        omg: [8&times;1 Series]
+     ttrend: [9&times;1 Series]
+    std_eps: 0.0500
+    std_omg: 0.0500
+          a: [9&times;1 Series]
+          b: [9&times;1 Series]
+          c: 1.1000
+     growth: [8&times;1 Series]
+
+
+ans = 
+
+    &lt;a href="matlab: help Series"&gt;Series&lt;/a&gt; Object: 8-by-1
+
+    2010Q1:  -2.1337
+    2010Q2:  -3.7114
+    2010Q3:  -7.7005
+    2010Q4:   4.7078
+    2011Q1:   1.8429
+    2011Q2:   7.3511
+    2011Q3:  -1.5603
+    2011Q4:  0.87999
+    
+    'Dates'    'Growth'
+
+    User Data: Empty
+
+
+ans = 
+
+    &lt;a href="matlab: help Series"&gt;Series&lt;/a&gt; Object: 9-by-1
+
+    2009Q4:    0.776
+    2010Q1:  0.76391
+    2010Q2:  0.78477
+    2010Q3:    0.877
+    2010Q4:  0.97204
+    2011Q1:   1.0223
+    2011Q2:   1.0702
+    2011Q3:   1.1999
+    2011Q4:    1.269
+    
+    'Dates'    'Equation for a'
+
+    User Data: Empty
+
+
+ans = 
+
+    &lt;a href="matlab: help Series"&gt;Series&lt;/a&gt; Object: 9-by-1
+
+    2009Q4:    0.569
+    2010Q1:  0.75432
+    2010Q2:  0.86852
+    2010Q3:  0.93194
+    2010Q4:  0.96537
+    2011Q1:  0.98253
+    2011Q2:  0.99123
+    2011Q3:   0.9956
+    2011Q4:   0.9978
+    
+    'Dates'    'Another Equation for b'
+
+    User Data: Empty
+
+
+s1 = 
+
+  struct with fields:
+
+          y: [9&times;1 Series]
+          e: [9&times;1 Series]
+        eps: [8&times;1 Series]
+        omg: [8&times;1 Series]
+     ttrend: [9&times;1 Series]
+    std_eps: 0.0500
+    std_omg: 0.0500
+          a: [9&times;1 Series]
+          b: [9&times;1 Series]
+          c: 1.1000
+     growth: [8&times;1 Series]
+
+
+ans = 
+
+    &lt;a href="matlab: help Series"&gt;Series&lt;/a&gt; Object: 8-by-1
+
+    2010Q1:  -2.1337
+    2010Q2:  -3.7114
+    2010Q3:  -7.7005
+    2010Q4:   4.7078
+    2011Q1:   1.8429
+    2011Q2:   7.3511
+    2011Q3:  -1.5603
+    2011Q4:  0.87999
+    
+    'Dates'    'Growth'
+
+    User Data: Empty
+
+
+ans = 
+
+    &lt;a href="matlab: help Series"&gt;Series&lt;/a&gt; Object: 9-by-1
+
+    2009Q4:    0.776
+    2010Q1:  0.76391
+    2010Q2:  0.78477
+    2010Q3:    0.877
+    2010Q4:  0.97204
+    2011Q1:   1.0223
+    2011Q2:   1.0702
+    2011Q3:   1.1999
+    2011Q4:    1.269
+    
+    'Dates'    'Equation for a'
+
+    User Data: Empty
+
+
+ans = 
+
+    &lt;a href="matlab: help Series"&gt;Series&lt;/a&gt; Object: 9-by-1
+
+    2009Q4:    0.569
+    2010Q1:  0.75432
+    2010Q2:  0.86852
+    2010Q3:  0.93194
+    2010Q4:  0.96537
+    2011Q1:  0.98253
+    2011Q2:  0.99123
+    2011Q3:   0.9956
+    2011Q4:   0.9978
+    
+    'Dates'    'Another Equation for b'
+
+    User Data: Empty
+
+
+ans = 
+
+  struct with fields:
+
+          y: 0
+          e: 0
+        eps: 0
+        omg: 0
+     ttrend: 0
+    std_eps: 0
+    std_omg: 0
+          a: 0
+          b: 0
+          c: 0
+     growth: 0
+
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Reporting Equations in Model File 
+%
+% Reporting equations can be included in a model file, under the heading
+% |!reporting_equations|. The is convenient when you need to calculate and
+% report a number of variables that are transformations of some other model
+% results but do not feed back into the model. Reporting equations are
+% mostly treated separately from the rest of the model: for example, the
+% reporting equations are not evaluated within a |simulate| command but
+% need to be run using the |reporting| command.
+
+
+%% Clear Workspace 
+
+close all
+clear
+%#ok<*NOPTS>
+
+
+%% Look into Model File 
+%
+% The model file |example.model| contains two transition variables and
+% equations, and three reporting equations, which are exactly the same as
+% in the other examples in this tutorial. Note that you do not declare
+% variables created or used in reporting equations.
+
+edit example.model
+
+
+%% Read Model File 
+%
+% Read the model file |Example.model| and create a model object.
+% Set standard errors for the two model shocks, solve the model
+% and its steady state (because this is a linear model, steady
+% state is computed *after* the first-order solution). List
+% transition variables, transition equations and reporting
+% equations. Retrieve the reporting object (which can then be
+% manipulated separately if you wish). Note there is nothing like
+% reporting variables in the model object; they are created on
+% the fly when running reporting equations.
+
+m = model('example.model', 'Linear=', true);
+m.std_eps = 0.05;
+m.std_omg = 0.05;
+m = solve(m);
+m = sstate(m);
+
+get(m, 'xNames').'
+get(m, 'xEqtn').'
+get(m, 'rEqtn').'
+get(m, 'rpteq')
+
+
+%% Alternative Way of Creating Model File
+%
+% Yet another way of creating the same model object would be
+% importing the reporting equations into a model file using the
+% keyword |!import|; see |yet_another_example.model|. The two
+% model objects, |m| and |m1|, are the same.
+
+edit yet_another_example.model
+m1 = model('yet_another_example.model', 'Linear=', true);
+isequal(m, m1)
+
+
+
+%% Create Input Database for Simulation 
+%
+% Create an initial input database (here, a steady-state database) for
+% simulating transition equations. The option |'randomShocks=' true| says
+% that the two model shocks, |eps| and |omg|, will be drawn
+% randomly from a normal distribution with std errors set in the model
+% object, |std_eps| and |std_omg|.
+
+startDate = qq(2010, 1);
+endDate = qq(2011, 4);
+
+d = sstatedb(m, startDate:endDate, 'ShockFunc=', @randn)
+d.eps 
+d.omg 
+
+
+%% Simulate Transition Equations 
+%
+% Simulate transition equations. The |simulate| command does not do
+% anything with reporting equations. The output database, |s|, does not
+% include any of the variables created in reporting equations.
+
+s = simulate(m, d, startDate:endDate, 'AppendPresample=', true)
+
+
+%% Add Initial Conditions for Reporting Equations
+%
+% Before running the reporting equations, create time series with the
+% necessary initial conditions. Use the output database from the previous
+% simulation as an input database into the reporting equations. The
+% reporting variables |a| and |b| occur with lags in reporintg equations, 
+% so they need to be supplied starting values. Also, the variable or
+% constant |c| on the right-hand side of the last reporting equation needs
+% to be assigned in the input database, too.
+
+s.a = Series(startDate-1, 0.776);
+s.b = Series(startDate-1, 0.569);
+s.c = 1.1;
+
+s
+
+%% Run Reporting Equations 
+%
+% Finally, run the reportng equations using the |reporting| command, with
+% the model object as its first input argument. This command has exactly
+% the same syntax as |rpteq/run| described in the other tutorial files.
+
+s = reporting(m, s, startDate:endDate, 'AppendPresample=', true)
+
+s.growth
+s.a
+s.b
+
+% ...
+%
+% Alternatively, retrieve the |rpteq| object from the model object using
+% the |get(~)| command, and run the reporting equations using the |run(~)|
+% command on it, exactly the same way as in the |rpt_directly_in_mfile|.
+
+q = get(m, 'rpteq');
+
+s1 = run(q, s, startDate:endDate, 'AppendPresample=', true)
+
+s1.growth
+s1.a
+s1.b
+
+maxabs(s, s1)
+
+
+##### SOURCE END #####
+--></body></html>

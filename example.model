@@ -1,0 +1,25 @@
+!transition-variables
+
+    y, e
+
+!transition-shocks
+
+    eps, omg
+    
+!log-variables
+
+    y
+    
+!transition_equations
+
+    log(y) = 0.02 + log(y{-1}) + eps;
+
+    e = 0.8*e{-1} + omg;
+    
+!reporting-equations
+
+    'Growth' growth = 100*(y/y{-1}-1);
+
+    'Equation for a' a = c * a{-1}^0.8 * b{-1}^0.2 * exp(e);
+
+    'Another Equation for b' b = sqrt(b{-1});

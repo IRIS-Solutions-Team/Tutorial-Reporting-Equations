@@ -1,0 +1,348 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Reporting Equations in Separate File</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-08-07"><meta name="DC.source" content="rpteq_in_separate_file.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Reporting Equations in Separate File</h1><!--introduction--><p>Saving reporting equations in a separate text file, and creating <tt>rpteq</tt> objects based on such text files is a convenient option if you, for example, have a large number of equations that are used multiple times in different places. Otherwise, there is absolutely no difference in how to work with an <tt>rpteq</tt> object created directly or from a separate file.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Clear Workspace</a></li><li><a href="#2">Look into <tt>example.rpt</tt> File</a></li><li><a href="#3">Create rpteq Object</a></li><li><a href="#4">Evaluate Reporting Equations</a></li><li><a href="#5">Compare Results with Previous File</a></li></ul></div><h2 id="1">Clear Workspace</h2><pre class="codeinput">close <span class="string">all</span>
+clear
+<span class="comment">%#ok&lt;*NOPTS&gt;</span>
+
+Model
+</pre><pre class="codeoutput">
+ans = 
+
+  1&times;0 Empty Nonlinear Model
+
+                     FileName: ''
+                      Comment: ''
+                     IsLinear: 0
+                     IsGrowth: 0
+                NumOfVariants: 0
+          NumOfVariantsSolved: 0
+    NumOfMeasurementEquations: 0
+     NumOfTransitionEquations: 0
+       SizeOfTransitionMatrix: [0 0]
+             NumOfExportFiles: 0
+                     UserData: []
+
+</pre><h2 id="2">Look into <tt>example.rpt</tt> File</h2><p>Save the three reporting equations (the same equations as in <tt>rpteq_directly_in_mfile</tt>) in a separate text file, <tt>example.rpt</tt>; the file can have any extension. If you need so, you can use all preparser commands in that file, such as <tt>!if</tt>, <tt>!switch</tt>, <tt>!for</tt>, <tt>!substitutions</tt>, etc.</p><pre class="codeinput">edit <span class="string">example.rpt</span>
+</pre><h2 id="3">Create rpteq Object</h2><p>Call the <tt>rpteq</tt> command with the name of the file as its first input argument. This is practially the only difference from what we're doing in <tt>rpteq_directly_in_mfile</tt>.</p><pre class="codeinput">q = rpteq(<span class="string">'example.rpt'</span>)
+</pre><pre class="codeoutput">
+q = 
+
+&lt;a href="matlab: help rpteq"&gt;rpteq&lt;/a&gt; Object
+    Number of Equations: [3]
+    Comment: 
+    User Data: Empty
+    Export File(s): [0]
+
+</pre><h2 id="4">Evaluate Reporting Equations</h2><p>The rest of the file works exactly the same as <tt>rpteq_directly_in_mfile</tt>. Check out the other file for details on what is going on.</p><pre class="codeinput">load <span class="string">rpteq_directly_in_mfiles</span> <span class="string">d</span> <span class="string">d1</span> <span class="string">d2</span> <span class="string">d3</span> <span class="string">startDate</span> <span class="string">endDate</span>
+
+g1 = run(q, d, startDate:endDate)
+g1.growth
+g1.a
+g1.b
+
+g2 = run(q, d, startDate:endDate, <span class="string">'AppendPresample='</span>, true)
+g2.a
+g2.b
+
+g3 = run(q, d, startDate:endDate, <span class="string">'Fresh='</span>, true)
+</pre><pre class="codeoutput">
+g1 = 
+
+  struct with fields:
+
+         y: [9&times;1 Series]
+         a: [8&times;1 Series]
+         b: [8&times;1 Series]
+         e: [8&times;1 Series]
+         c: 1.1000
+    growth: [8&times;1 Series]
+
+
+ans = 
+
+    &lt;a href="matlab: help Series"&gt;Series&lt;/a&gt; Object: 8-by-1
+
+    2010Q1:    7.1934
+    2010Q2:   -1.1884
+    2010Q3:   -3.5319
+    2010Q4:    6.1366
+    2011Q1:   -8.3631
+    2011Q2:    4.0291
+    2011Q3:  -0.54782
+    2011Q4:    3.6985
+    
+    'Dates'    'Growth'
+
+    User Data: Empty
+
+
+ans = 
+
+    &lt;a href="matlab: help Series"&gt;Series&lt;/a&gt; Object: 8-by-1
+
+    2010Q1:  0.93808
+    2010Q2:  0.64105
+    2010Q3:  0.73813
+    2010Q4:  0.78339
+    2011Q1:   1.2298
+    2011Q2:   2.2342
+    2011Q3:   3.6374
+    2011Q4:    2.005
+    
+    'Dates'    'Equation for a'
+
+    User Data: Empty
+
+
+ans = 
+
+    &lt;a href="matlab: help Series"&gt;Series&lt;/a&gt; Object: 8-by-1
+
+    2010Q1:  0.75432
+    2010Q2:  0.86852
+    2010Q3:  0.93194
+    2010Q4:  0.96537
+    2011Q1:  0.98253
+    2011Q2:  0.99123
+    2011Q3:   0.9956
+    2011Q4:   0.9978
+    
+    'Dates'    'Another Equation for b'
+
+    User Data: Empty
+
+
+g2 = 
+
+  struct with fields:
+
+         y: [9&times;1 Series]
+         a: [12&times;1 Series]
+         b: [12&times;1 Series]
+         e: [8&times;1 Series]
+         c: 1.1000
+    growth: [8&times;1 Series]
+
+
+ans = 
+
+    &lt;a href="matlab: help Series"&gt;Series&lt;/a&gt; Object: 12-by-1
+
+    2009Q1:    0.776
+    2009Q2:    0.776
+    2009Q3:    0.776
+    2009Q4:    0.776
+    2010Q1:  0.93808
+    2010Q2:  0.64105
+    2010Q3:  0.73813
+    2010Q4:  0.78339
+    2011Q1:   1.2298
+    2011Q2:   2.2342
+    2011Q3:   3.6374
+    2011Q4:    2.005
+    
+    'Dates'    'Equation for a'
+
+    User Data: Empty
+
+
+ans = 
+
+    &lt;a href="matlab: help Series"&gt;Series&lt;/a&gt; Object: 12-by-1
+
+    2009Q1:    0.569
+    2009Q2:    0.569
+    2009Q3:    0.569
+    2009Q4:    0.569
+    2010Q1:  0.75432
+    2010Q2:  0.86852
+    2010Q3:  0.93194
+    2010Q4:  0.96537
+    2011Q1:  0.98253
+    2011Q2:  0.99123
+    2011Q3:   0.9956
+    2011Q4:   0.9978
+    
+    'Dates'    'Another Equation for b'
+
+    User Data: Empty
+
+
+g3 = 
+
+  struct with fields:
+
+    growth: [8&times;1 Series]
+         a: [8&times;1 Series]
+         b: [8&times;1 Series]
+
+</pre><h2 id="5">Compare Results with Previous File</h2><pre class="codeinput">maxabs(d1, g1)
+maxabs(d2, g2)
+maxabs(d3, g3)
+</pre><pre class="codeoutput">
+ans = 
+
+  struct with fields:
+
+         y: 0
+         a: 0
+         b: 0
+         e: 0
+         c: 0
+    growth: 0
+
+
+ans = 
+
+  struct with fields:
+
+         y: 0
+         a: 0
+         b: 0
+         e: 0
+         c: 0
+    growth: 0
+
+
+ans = 
+
+  struct with fields:
+
+    growth: 0
+         a: 0
+         b: 0
+
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Reporting Equations in Separate File 
+%
+% Saving reporting equations in a separate text file, and creating |rpteq|
+% objects based on such text files is a convenient option if you, for
+% example, have a large number of equations that are used multiple times in
+% different places. Otherwise, there is absolutely no difference in how to
+% work with an |rpteq| object created directly or from a separate file.
+
+
+%% Clear Workspace
+
+close all
+clear
+%#ok<*NOPTS>
+
+Model
+
+
+%% Look into |example.rpt| File 
+%
+% Save the three reporting equations (the same equations as in
+% |rpteq_directly_in_mfile|) in a separate text file, |example.rpt|; the
+% file can have any extension. If you need so, you can use all preparser
+% commands in that file, such as |!if|, |!switch|, |!for|,
+% |!substitutions|, etc. 
+
+edit example.rpt
+
+
+%% Create rpteq Object 
+%
+% Call the |rpteq| command with the name of the file as its first input
+% argument. This is practially the only difference from what we're doing in
+% |rpteq_directly_in_mfile|.
+
+q = rpteq('example.rpt') 
+
+
+%% Evaluate Reporting Equations 
+%
+% The rest of the file works exactly the same as |rpteq_directly_in_mfile|.
+% Check out the other file for details on what is going on.
+
+load rpteq_directly_in_mfiles d d1 d2 d3 startDate endDate
+
+g1 = run(q, d, startDate:endDate) 
+g1.growth
+g1.a
+g1.b
+
+g2 = run(q, d, startDate:endDate, 'AppendPresample=', true)
+g2.a
+g2.b
+
+g3 = run(q, d, startDate:endDate, 'Fresh=', true)
+
+
+%% Compare Results with Previous File 
+
+maxabs(d1, g1)
+maxabs(d2, g2)
+maxabs(d3, g3)
+
+
+##### SOURCE END #####
+--></body></html>
